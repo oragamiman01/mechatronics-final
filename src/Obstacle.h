@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "Balanced.h"
+#include "KalmanFilter.h"
 
 class Ultrasonic
 {
