@@ -25,7 +25,23 @@ void setup()
   delay(100);
 }
 
+int mode = 0;
+int temp = millis();
+
 void loop() 
 { 
-   Function.Obstacle_Mode();
+
+  switch (mode) { 
+    case (0): Function.Spiral_Mode();
+    case (1): Function.Obstacle_Mode();
+  }
+  
+  if (millis() - temp >= 10000) {
+    if (mode == 0) {
+      mode = 1;
+    } else {
+      mode = 0;
+    }
+    temp = millis();
+  }
 }
