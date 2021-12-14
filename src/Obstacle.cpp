@@ -18,19 +18,18 @@ char Ultrasonic ::measure_flag = 0;
 unsigned long Ultrasonic ::measure_prev_time = 0;
 double Ultrasonic::distance_value;
 
-void Function::Spiral_Mode(bool & obstacle_encountered)
+void Function::Spiral_Mode(bool & obstacle_encountered, bool & in_startup)
 {
   IR.Send();
   Ultrasonic.Get_Distance();
 
   if (millis() - follow_prev_time >= 100)
   {
-    follow_prev_time = millis();
     spiral_time = millis();
     while (millis() - spiral_time < 1500 + forward_time) {
       Balanced.Motion_Control(FORWARD);
 
-      if (OBSTACLE_JUDAGEMENT || If_IR_TRIGGERED) {
+      if ((OBSTACLE_JUDAGEMENT) && !in_startup) {
         obstacle_encountered = true;
         return;
       }
@@ -61,12 +60,11 @@ void Function::Spiral_Mode(bool & obstacle_encountered)
     }
     forward_time += 750;
     turn_90 = millis();
-    while (millis() - turn_90 < 2000) {
+    while (millis() - turn_90 < 1825) {
       Balanced.Motion_Control(RIGHT);
     }
 
   }
-  Obstacle_time = millis();
 }
 
 void Function::Obstacle_Mode()
@@ -92,7 +90,7 @@ void Function::Obstacle_Mode()
         }
       }
       Turning_Time = millis();
-      while (millis() - Turning_Time < 750)
+      while (millis() - Turning_Time < 500)
       {
         if (turn_flag)
         { turn_flag = 0;

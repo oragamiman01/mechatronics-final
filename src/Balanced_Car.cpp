@@ -11,6 +11,10 @@ extern Balanced Balanced;
 extern Ultrasonic Ultrasonic;
 extern IR IR;
 Function Function;
+int mode = 0;
+unsigned long temp = millis();
+bool obstacle_encountered = false;
+bool in_startup = true;
 
 
 void setup() 
@@ -23,18 +27,24 @@ void setup()
   Mpu6050.init();
   Serial.begin(9600);
   delay(100);
+  
+while (millis() - temp < 5000) {
+  Function.Spiral_Mode(obstacle_encountered, in_startup);
+}
+in_startup = false;
+obstacle_encountered = false;
 }
 
-int mode = 0;
-int temp = millis();
-bool obstacle_encountered = false;
 
 void loop() 
 { 
-  while (!obstacle_encountered) {
-    Function.Spiral_Mode(obstacle_encountered);
+  if (millis() - temp >= 100) {
+    temp = millis();
+    while (!obstacle_encountered) {
+      Function.Spiral_Mode(obstacle_encountered, in_startup);
+    }
+    Function.Obstacle_Mode();
   }
-  Function.Obstacle_Mode();
 
   /*
   switch (mode) { 

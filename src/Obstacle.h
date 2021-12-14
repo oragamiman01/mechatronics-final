@@ -27,7 +27,7 @@ class Ultrasonic
 #define TRIG_PIN 11
 #define Distance_MIN 3
 #define Distance_MAX 35
-#define Obstacle_MIN 10
+#define Obstacle_MIN 20
 #define DISTANCE_JUDAGEMENT (distance_value > Distance_MIN && distance_value < Distance_MAX)
 #define OBSTACLE_JUDAGEMENT (Ultrasonic.distance_value < Obstacle_MIN)
 #define OBSTACLE_JUDAGEMENT2 (Ultrasonic.distance_value < 10)
@@ -38,7 +38,7 @@ class Function
 {
   public:
     void Obstacle_Mode();
-    void Spiral_Mode(bool & obstacle_encountered);
+    void Spiral_Mode(bool & obstacle_encountered, bool & in_startup);
     void Follow_Mode();
 
   public:
