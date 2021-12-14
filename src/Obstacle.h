@@ -38,7 +38,7 @@ class Function
 {
   public:
     void Obstacle_Mode();
-    void Spiral_Mode();
+    void Spiral_Mode(bool & obstacle_encountered);
     void Follow_Mode();
 
   public:

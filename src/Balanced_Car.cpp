@@ -27,13 +27,20 @@ void setup()
 
 int mode = 0;
 int temp = millis();
+bool obstacle_encountered = false;
 
 void loop() 
 { 
+  while (!obstacle_encountered) {
+    Function.Spiral_Mode(obstacle_encountered);
+  }
+  Function.Obstacle_Mode();
 
+  /*
   switch (mode) { 
-    case (0): Function.Spiral_Mode();
+    case (0): Function.Follow_Mode();
     case (1): Function.Obstacle_Mode();
+    case (2): Function.Spiral_Mode();
   }
   
   if (millis() - temp >= 10000) {
@@ -44,4 +51,5 @@ void loop()
     }
     temp = millis();
   }
+  */
 }
