@@ -27,7 +27,7 @@ void Function::Spiral_Mode()
   {
     follow_prev_time = millis();
     spiral_time = millis();
-    while (millis() - spiral_time < 5000) {
+    while (millis() - spiral_time < 1500 + forward_time) {
       Balanced.Motion_Control(FORWARD);
 
       while (OBSTACLE_JUDAGEMENT || If_IR_TRIGGERED)
@@ -53,6 +53,7 @@ void Function::Spiral_Mode()
         turn_flag = 1;
       }
     }
+    forward_time += 250;
     turn_90 = millis();
     while (millis() - turn_90 < 1750) {
       Balanced.Motion_Control(RIGHT);
@@ -94,7 +95,46 @@ void Function::Obstacle_Mode()
       }
       turn_flag = 1;
     }
-    turn_90 = millis();
+
+  }
+  Obstacle_time = millis();
+}
+
+void Function::Follow_Mode()
+{
+  IR.Send();
+  Ultrasonic.Get_Distance();
+
+  if (millis() - follow_prev_time >= 100)
+  {
+    follow_prev_time = millis();
+    Balanced.Motion_Control(FORWARD);
+
+    while (OBSTACLE_JUDAGEMENT || If_IR_TRIGGERED)
+    {
+      Balanced.Motion_Control(STOP);
+      if (millis() - Obstacle_time > 10000)
+      { 
+        Obstacle_time = millis();
+        Back_time = millis();
+        while (millis() - Back_time < 500)
+        {
+          Balanced.Motion_Control(BACK);
+        }
+      }
+      Turning_Time = millis();
+      while (millis() - Turning_Time < 750)
+      {
+        if (turn_flag)
+        { turn_flag = 0;
+          IR.Check();
+        }
+      }
+      while (millis() - Turning_Time < 1000) {
+        Balanced.Motion_Control(LEFT);
+      }
+      turn_flag = 1;
+    }
 
   }
   Obstacle_time = millis();

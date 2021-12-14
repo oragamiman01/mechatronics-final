@@ -39,6 +39,7 @@ class Function
   public:
     void Obstacle_Mode();
     void Spiral_Mode();
+    void Follow_Mode();
 
   public:
     int follow_flag;
@@ -48,6 +49,7 @@ class Function
     unsigned long Back_time;
     unsigned long spiral_time;
     unsigned long turn_90;
+    unsigned long forward_time;
     int turn_flag = 1;
 };
 
