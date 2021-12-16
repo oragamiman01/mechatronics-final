@@ -18,7 +18,7 @@ char Ultrasonic ::measure_flag = 0;
 unsigned long Ultrasonic ::measure_prev_time = 0;
 double Ultrasonic::distance_value;
 
-void Function::Spiral_Mode(bool & obstacle_encountered, bool & in_startup)
+void Function::Spiral_Mode(bool & obstacle_encountered)
 {
   IR.Send();
   Ultrasonic.Get_Distance();
@@ -26,44 +26,20 @@ void Function::Spiral_Mode(bool & obstacle_encountered, bool & in_startup)
   if (millis() - follow_prev_time >= 100)
   {
     spiral_time = millis();
+    //start with 1500ms forward movement, increases from there
     while (millis() - spiral_time < 1500 + forward_time) {
       Balanced.Motion_Control(FORWARD);
 
-      if ((OBSTACLE_JUDAGEMENT) && !in_startup) {
+      if (OBSTACLE_JUDAGEMENT || If_IR_TRIGGERED) {
         obstacle_encountered = true;
-        return;
+        return; //break out of spiral mode if obstacle gets encountered
       }
-      /*
-      while (OBSTACLE_JUDAGEMENT || If_IR_TRIGGERED)
-      {
-
-        Balanced.Motion_Control(STOP);
-        if (millis() - Obstacle_time > 10000)
-        { 
-          Obstacle_time = millis();
-          Back_time = millis();
-          while (millis() - Back_time < 500)
-          {
-            Balanced.Motion_Control(BACK);
-          }
-        }
-        Turning_Time = millis();
-        while (millis() - Turning_Time < 750)
-        {
-          if (turn_flag)
-          { turn_flag = 0;
-            IR.Check();
-          }
-        }
-        turn_flag = 1;
-      }*/
     }
-    forward_time += 750;
+    forward_time += 750; //extend forward movement by 750ms each leg
     turn_90 = millis();
-    while (millis() - turn_90 < 1825) {
+    while (millis() - turn_90 < 1825) { //1825ms ~ 90 degree turn
       Balanced.Motion_Control(RIGHT);
     }
-
   }
 }
 
